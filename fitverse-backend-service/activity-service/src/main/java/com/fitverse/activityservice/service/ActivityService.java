@@ -2,10 +2,13 @@ package com.fitverse.activityservice.service;
 
 import com.fitverse.activityservice.dto.ActivityRequest;
 import com.fitverse.activityservice.dto.ActivityResponse;
+import com.fitverse.activityservice.exception.ActivityNotExistException;
 import com.fitverse.activityservice.model.Activity;
 import com.fitverse.activityservice.repository.ActivityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -14,6 +17,13 @@ public class ActivityService {
 
     public ActivityResponse createActivity(ActivityRequest activityRequest) {
         return convertToResponse ( activityRepository.save ( convertToDocument ( activityRequest ) ) );
+    }
+
+    public List<ActivityResponse> getAllActivityOfAUser(String userId) {
+        return activityRepository.findAllActivityByUserId ( userId )
+                .stream ( )
+                .map ( this::convertToResponse )
+                .toList ( );
     }
 
     private ActivityResponse convertToResponse(Activity activity) {
@@ -39,5 +49,11 @@ public class ActivityService {
                 .duration ( request.getDuration ( ) )
                 .caloriesBurned ( request.getCaloriesBurned ( ) )
                 .build ( );
+    }
+
+    public ActivityResponse getActivityByActivityId(String activityId) {
+        Activity activity = activityRepository.getActivityById ( activityId )
+                .orElseThrow ( () -> new ActivityNotExistException ( "Activity with id: " + activityId + " does not exist" ) );
+        return convertToResponse ( activity );
     }
 }
