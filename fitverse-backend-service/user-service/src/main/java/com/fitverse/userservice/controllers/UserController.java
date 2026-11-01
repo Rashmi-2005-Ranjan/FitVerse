@@ -29,4 +29,11 @@ public class UserController {
         return ResponseEntity.status ( HttpStatus.OK )
                 .body ( response );
     }
+
+    @GetMapping("validate-user/{userId}")
+    public ResponseEntity<Boolean> validateUserProfile(@Valid @PathVariable String userId) {
+        Boolean response = userService.isUserExist ( userId );
+        return ResponseEntity.status ( HttpStatus.OK )
+                .body ( response );
+    }
 }
