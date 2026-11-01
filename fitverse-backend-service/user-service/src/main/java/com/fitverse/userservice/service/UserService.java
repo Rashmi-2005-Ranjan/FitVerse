@@ -7,6 +7,7 @@ import com.fitverse.userservice.exception.UserNotExistsException;
 import com.fitverse.userservice.model.User;
 import com.fitverse.userservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -49,5 +50,10 @@ public class UserService {
         User user = userRepository.findUserById ( userId )
                 .orElseThrow ( () -> new UserNotExistsException ( "User with given id doesn't exists" ) );
         return convertToResponse ( user );
+    }
+
+    public Boolean isUserExist(String userId) {
+        return userRepository.existsUserById ( userId )
+                .orElseThrow ( () -> new UserNotExistsException ( "User with given id doesn't exists" ) );
     }
 }

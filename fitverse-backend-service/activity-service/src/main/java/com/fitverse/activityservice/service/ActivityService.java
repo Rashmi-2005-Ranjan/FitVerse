@@ -3,9 +3,11 @@ package com.fitverse.activityservice.service;
 import com.fitverse.activityservice.dto.ActivityRequest;
 import com.fitverse.activityservice.dto.ActivityResponse;
 import com.fitverse.activityservice.exception.ActivityNotExistException;
+import com.fitverse.activityservice.exception.UserNotExistsException;
 import com.fitverse.activityservice.model.Activity;
 import com.fitverse.activityservice.repository.ActivityRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ActivityService {
     private final ActivityRepository activityRepository;
+    private final UserValidationService userValidationService;
 
     public ActivityResponse createActivity(ActivityRequest activityRequest) {
         return convertToResponse ( activityRepository.save ( convertToDocument ( activityRequest ) ) );
@@ -40,15 +43,20 @@ public class ActivityService {
                 .build ( );
     }
 
+
     private Activity convertToDocument(ActivityRequest request) {
-        return Activity.builder ( )
-                .userId ( request.getUserId ( ) )
-                .activityType ( request.getActivityType ( ) )
-                .startTime ( request.getStartTime ( ) )
-                .additionalMetrics ( request.getAdditionalMetrics ( ) )
-                .duration ( request.getDuration ( ) )
-                .caloriesBurned ( request.getCaloriesBurned ( ) )
-                .build ( );
+        if (!userValidationService.validateUser ( request.getUserId ( ) )) {
+            throw new UserNotExistsException ( "Invalid user id for " + request.getActivityType ( ) + " activity..." );
+        } else {
+            return Activity.builder ( )
+                    .userId ( request.getUserId ( ) )
+                    .activityType ( request.getActivityType ( ) )
+                    .startTime ( request.getStartTime ( ) )
+                    .additionalMetrics ( request.getAdditionalMetrics ( ) )
+                    .duration ( request.getDuration ( ) )
+                    .caloriesBurned ( request.getCaloriesBurned ( ) )
+                    .build ( );
+        }
     }
 
     public ActivityResponse getActivityByActivityId(String activityId) {
