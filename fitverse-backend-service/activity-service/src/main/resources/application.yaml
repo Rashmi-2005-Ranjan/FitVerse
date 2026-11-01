@@ -3,8 +3,24 @@ spring:
     name: ACTIVITY-SERVICE
   mongodb:
     uri: mongodb://localhost:27017/fitverse
+
+  # Correct standard configuration for RabbitMQ
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+# Custom properties to define your messaging topology (Used in your Java @Bean configs)
+fitverse:
+  rabbitmq:
+    exchange: fitverse.exchange
+    queue: activity.queue
+    routing-key: activity.tracking
+
 server:
   port: 8082
+
 eureka:
   client:
     service-url:
