@@ -1,6 +1,4 @@
 spring:
-  application:
-    name: ACTIVITY-SERVICE
   mongodb:
     uri: mongodb://localhost:27017/fitverse
 
