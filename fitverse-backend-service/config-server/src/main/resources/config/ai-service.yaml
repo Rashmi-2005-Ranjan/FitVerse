@@ -1,8 +1,4 @@
-
 spring:
-  application:
-    name: AI-SERVICE
-
   datasource:
     username: root
     password: rashmi

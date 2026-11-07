@@ -1,7 +1,4 @@
 spring:
-  application:
-    name: USER-SERVICE
-
   datasource:
     url: jdbc:postgresql://localhost:5432/fitverse_user_db
     username: postgres
