@@ -16,6 +16,7 @@ public class Activity {
     private Map<String, Object> additionalMetrics;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private String type;
 
     public enum ActivityType {
         RUNNING,
