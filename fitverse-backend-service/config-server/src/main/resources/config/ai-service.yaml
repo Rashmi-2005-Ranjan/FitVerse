@@ -1,0 +1,63 @@
+
+spring:
+  application:
+    name: AI-SERVICE
+
+  datasource:
+    username: root
+    password: rashmi
+    url: jdbc:mysql://localhost:3306/fitverse_ai_recommendation
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  # RabbitMQ configuration
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+    listener:
+      simple:
+        retry:
+          enabled: false
+        default-requeue-rejected: false
+
+# RabbitMQ custom properties
+fitverse:
+  rabbitmq:
+    exchange: fitverse.exchange
+    queue: activity.queue
+    routing-key: activity.tracking
+
+    # Dead Letter Exchange configuration
+    dlx-exchange: fitverse.dlx
+    dlq: activity.dlq
+    dlq-routing-key: activity.failed
+
+# Server configuration
+server:
+  port: 8083
+
+# Eureka configuration
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}
+
+# Gemini API configuration
+gemini:
+  api:
+    url: ${GEMINI_API_URL}
+    key: ${GEMINI_API_KEY}
