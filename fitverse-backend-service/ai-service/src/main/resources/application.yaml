@@ -1,36 +1,5 @@
 spring:
   application:
     name: AI-SERVICE
-  datasource:
-    username: root
-    password: rashmi
-    url: jdbc:mysql://localhost:3306/fitverse_ai_recommendation
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-    # Correct standard configuration for RabbitMQ
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
-
-  # Custom properties to define your messaging topology (Used in your Java @Bean configs)
-fitverse:
-  rabbitmq:
-    exchange: fitverse.exchange
-    queue: activity.queue
-    routing-key: activity.tracking
-server:
-  port: 8083
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
-  instance:
-    prefer-ip-address: true
-    instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}
+  config:
+    import: optional:configserver:http://localhost:8888
