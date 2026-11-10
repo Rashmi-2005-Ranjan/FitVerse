@@ -18,5 +18,7 @@ public class RegisterRequest {
     @NotBlank(message = "First name is required")
     private String firstName;
 
+    private String keycloakId;
+
     private String lastName;
 }

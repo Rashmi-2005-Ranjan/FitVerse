@@ -2,12 +2,10 @@ package com.fitverse.userservice.service;
 
 import com.fitverse.userservice.dto.RegisterRequest;
 import com.fitverse.userservice.dto.UserResponse;
-import com.fitverse.userservice.exception.UserAlreadyExistsException;
 import com.fitverse.userservice.exception.UserNotExistsException;
 import com.fitverse.userservice.model.User;
 import com.fitverse.userservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,7 +15,8 @@ public class UserService {
 
     public UserResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail ( request.getEmail ( ) )) {
-            throw new UserAlreadyExistsException ( "User with this email already exists" );
+            User existingUser = userRepository.findUserByEmail ( request.getEmail ( ) );
+            return convertToResponse ( existingUser );
         }
         User user = convertToEntity ( request );
         user = userRepository.save ( user );
@@ -29,6 +28,7 @@ public class UserService {
         return UserResponse.builder ( )
                 .email ( userEntity.getEmail ( ) )
                 .password ( userEntity.getPassword ( ) )
+                .keycloakId ( userEntity.getKeycloakId ( ) )
                 .firstName ( userEntity.getFirstName ( ) )
                 .lastName ( userEntity.getLastName ( ) )
                 .createdAt ( userEntity.getCreatedAt ( ) )
@@ -41,6 +41,7 @@ public class UserService {
         return User.builder ( )
                 .email ( registerRequest.getEmail ( ) )
                 .password ( registerRequest.getPassword ( ) )
+                .keycloakId ( registerRequest.getKeycloakId ( ) )
                 .firstName ( registerRequest.getFirstName ( ) )
                 .lastName ( registerRequest.getLastName ( ) )
                 .build ( );
@@ -53,7 +54,10 @@ public class UserService {
     }
 
     public Boolean isUserExist(String userId) {
-        return userRepository.existsUserById ( userId )
-                .orElseThrow ( () -> new UserNotExistsException ( "User with given id doesn't exists" ) );
+        Boolean isExists = userRepository.existsUserByKeycloakId ( userId );
+        if (!isExists) {
+            throw new UserNotExistsException ( "User with given id doesn't exists" );
+        }
+        return true;
     }
 }
