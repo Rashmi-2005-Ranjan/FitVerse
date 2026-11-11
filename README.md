@@ -1,10 +1,10 @@
 # 🏋️ FitVerse – AI-Powered Fitness Platform
 
-**FitVerse** is a full-stack, AI-powered fitness application built using a **microservices architecture** to provide a modern, scalable, and personalized fitness experience.
+FitVerse is a full-stack, AI-powered fitness application built using a **microservices architecture** to provide a modern, scalable, and personalized fitness experience.
 
-The application combines **React.js**, **Spring Boot**, **PostgreSQL**, **MongoDB**, **Apache Kafka**, **Keycloak**, and **Google Gemini AI** to deliver intelligent fitness-related services with secure authentication, distributed data management, and asynchronous communication.
+The application combines **React.js, Spring Boot, PostgreSQL, MongoDB, RabbitMQ, Keycloak, Docker, and Google Gemini AI** to deliver intelligent fitness services with secure authentication, distributed data management, and asynchronous communication.
 
-FitVerse is designed to demonstrate real-world backend engineering concepts, including microservices, service discovery, API gateway routing, event-driven architecture, OAuth2 authentication, and integration with generative AI.
+FitVerse is designed to demonstrate real-world backend engineering concepts, including microservices, service discovery, API Gateway routing, event-driven architecture, OAuth2 authentication, containerization, and generative AI integration.
 
 > 🚧 **Project Status:** Under Active Development
 
@@ -18,28 +18,13 @@ FitVerse is designed to demonstrate real-world backend engineering concepts, inc
 - 🗄️ Hybrid database architecture using PostgreSQL and MongoDB
 - 🤖 Google Gemini AI integration
 - 🔐 OAuth2 and OpenID Connect authentication using Keycloak
-- 📨 Event-driven asynchronous communication using Apache Kafka
+- 📨 Asynchronous inter-service communication using RabbitMQ
+- 🐳 Docker containerization for RabbitMQ and Keycloak
 - 🔎 Service discovery using Netflix Eureka Server
 - 🌐 Centralized API routing through an API Gateway
 - 🛡️ Spring Security for API protection
 - ✅ Request validation using Spring Boot Validation
 - 📦 Modular architecture for maintainability and scalability
-
----
-
-## 🚀 Project Overview
-
-FitVerse aims to build an intelligent fitness ecosystem by combining modern web development technologies with distributed backend services.
-
-Unlike traditional monolithic applications, FitVerse follows a **microservices architecture**, where individual services can be developed, deployed, and maintained independently.
-
-The platform focuses on three major engineering principles:
-
-1. **Scalability:** Independently scalable backend services.
-2. **Security:** Centralized identity and access management using Keycloak.
-3. **Intelligence:** AI-powered capabilities using Google Gemini.
-
-The application uses both relational and document-oriented databases to support different data storage requirements.
 
 ---
 
@@ -64,23 +49,19 @@ The application uses both relational and document-oriented databases to support 
 | Spring Web | RESTful API development |
 | Spring Data JPA | Relational database persistence |
 | Spring Data MongoDB | NoSQL database operations |
-| Spring Security | Authentication and authorization enforcement |
+| Spring Security | Authentication and authorization |
 | Spring Validation | Request and data validation |
 | Spring Cloud Netflix Eureka | Service registration and discovery |
-| Spring Cloud Gateway | API routing, if configured as the gateway |
+| Spring Cloud Gateway | Centralized API routing |
 
 ### 🗄️ Database
 
-| Database | Purpose |
+| Technology | Purpose |
 |---|---|
-| PostgreSQL | Relational and structured data |
-| MongoDB | Flexible document-based data |
+| PostgreSQL | Relational data storage |
+| MongoDB | Document-oriented data storage |
 
-FitVerse follows a **polyglot persistence approach**, using different database technologies based on the requirements of individual services.
-
-**PostgreSQL** is suitable for structured relational data requiring strong consistency and transactional operations.
-
-**MongoDB** supports flexible document models for data that may evolve over time.
+FitVerse follows a **polyglot persistence approach**, selecting the appropriate database technology based on individual microservice requirements.
 
 ### 🔐 Authentication & Security
 
@@ -88,18 +69,25 @@ FitVerse follows a **polyglot persistence approach**, using different database t
 |---|---|
 | Keycloak | Identity and access management |
 | OAuth 2.0 | Authorization framework |
-| OpenID Connect | User authentication |
+| OpenID Connect | Authentication protocol |
 | Spring Security | Securing backend APIs |
-| JWT | Token-based API authentication |
+| JWT | Token-based authentication |
 
-### 📨 Microservices Communication
+### 📨 Asynchronous Communication
 
 | Technology | Purpose |
 |---|---|
-| REST APIs | Synchronous communication |
-| Apache Kafka | Asynchronous event-driven communication |
-| Netflix Eureka | Service discovery |
-| API Gateway | Centralized routing and entry point |
+| RabbitMQ | Message broker for asynchronous communication |
+| AMQP | Messaging protocol |
+| Spring AMQP | RabbitMQ integration with Spring Boot |
+
+### 🐳 Containerization
+
+| Technology | Purpose |
+|---|---|
+| Docker | Containerization |
+| Docker Containers | Running RabbitMQ and Keycloak |
+| Docker Images | Packaging infrastructure services |
 
 ### 🤖 Artificial Intelligence
 
@@ -112,70 +100,46 @@ FitVerse follows a **polyglot persistence approach**, using different database t
 
 ## 🏗️ System Architecture
 
-FitVerse uses a distributed architecture where the frontend communicates with backend services through an API Gateway.
+FitVerse follows a distributed microservices architecture where the React frontend communicates with backend services through an API Gateway.
 
-The Eureka Server manages service discovery, while Kafka enables asynchronous communication between services.
+Eureka Server manages service discovery, RabbitMQ enables asynchronous communication, and Keycloak handles centralized authentication.
 
 ```mermaid
 flowchart TD
     U["👤 User"] --> R["⚛️ React Frontend"]
-
     R --> G["🌐 API Gateway"]
 
-    G --> A["🔐 Keycloak / OAuth2"]
+    G --> K["🔐 Keycloak OAuth2 / OIDC"]
     G --> MS["☕ Spring Boot Microservices"]
 
-    E["🔎 Eureka Discovery Server"] -.-> G
+    E["🔎 Eureka Server"] -.-> G
     E -.-> MS
 
     MS --> PG[("🐘 PostgreSQL")]
     MS --> MG[("🍃 MongoDB")]
 
-    MS <--> K["📨 Apache Kafka"]
+    MS <--> RMQ["🐰 RabbitMQ"]
 
     MS --> AI["🤖 Google Gemini API"]
+
+    subgraph Docker["🐳 Docker Containers"]
+        K
+        RMQ
+    end
 ```
 
 ### Architecture Components
 
-**1. React Frontend**
-
-Provides the user interface and communicates with backend APIs.
-
-**2. API Gateway**
-
-Acts as the centralized entry point for incoming client requests.
-
-Responsibilities may include:
-
-- Request routing
-- Authentication integration
-- Cross-origin resource sharing configuration
-- Centralized request handling
-
-**3. Eureka Discovery Server**
-
-Maintains a registry of available microservices, allowing services to discover one another dynamically.
-
-**4. Spring Boot Microservices**
-
-Contains independently managed backend services responsible for application functionality.
-
-**5. PostgreSQL and MongoDB**
-
-Provide relational and document-oriented persistence according to service requirements.
-
-**6. Apache Kafka**
-
-Enables asynchronous, event-driven communication between microservices.
-
-**7. Keycloak**
-
-Provides centralized identity management using OAuth2 and OpenID Connect.
-
-**8. Google Gemini AI**
-
-Provides generative AI capabilities for intelligent fitness-related features.
+1. **React Frontend:** Provides the user interface and communicates with backend APIs.
+2. **API Gateway:** Acts as the centralized entry point for client requests and routes them to appropriate services.
+3. **Eureka Server:** Maintains a registry of available microservices for dynamic service discovery.
+4. **Spring Boot Microservices:** Handle independent business functionalities.
+5. **PostgreSQL:** Stores structured relational data.
+6. **MongoDB:** Stores flexible document-oriented data.
+7. **RabbitMQ:** Enables asynchronous communication between microservices.
+8. **Keycloak:** Provides centralized authentication and identity management.
+9. **Google Gemini AI:** Provides generative AI capabilities.
+10. **Docker:** Runs RabbitMQ and Keycloak in isolated containers.
 
 ---
 
@@ -183,7 +147,9 @@ Provides generative AI capabilities for intelligent fitness-related features.
 
 FitVerse integrates **Keycloak** as its OAuth2 and OpenID Connect identity provider.
 
-Spring Security protects backend resources and validates authentication tokens.
+Keycloak runs inside a Docker container, providing centralized identity management independently of the Spring Boot application.
+
+Spring Security protects backend resources by validating JWT access tokens issued by Keycloak.
 
 ### Authentication Flow
 
@@ -198,8 +164,8 @@ sequenceDiagram
     U->>F: Access Application
     F->>K: Initiate Login
     K->>U: Authenticate User
-    K-->>F: Return Authorization Result
-    F->>K: Exchange Authorization Code with PKCE
+    K-->>F: Authorization Result
+    F->>K: Exchange Authorization Code + PKCE
     K-->>F: Issue Access Token
     F->>G: API Request with Bearer Token
     G->>S: Route Request
@@ -213,54 +179,111 @@ sequenceDiagram
 - Centralized user authentication
 - OAuth2 authorization
 - OpenID Connect integration
+- Authorization Code Flow with PKCE
 - JWT-based API security
 - Protected REST endpoints
 - Role-based access control
-- Spring Security resource server integration
+- Spring Security integration
 
 ---
 
-## 📨 Event-Driven Architecture with Apache Kafka
+## 📨 Asynchronous Communication with RabbitMQ
 
-FitVerse uses **Apache Kafka** to support asynchronous communication between microservices.
+FitVerse uses **RabbitMQ** as its message broker to enable asynchronous communication between microservices.
 
-Kafka enables services to publish and consume events without requiring direct synchronous communication for every operation.
+RabbitMQ runs inside a Docker container and allows services to exchange messages without requiring direct synchronous communication for every operation.
 
-### Kafka Communication Flow
+### RabbitMQ Communication Flow
 
 ```mermaid
 flowchart LR
-    A["Microservice A"] -->|"Publish Event"| K["Apache Kafka Topic"]
-    K -->|"Consume Event"| B["Microservice B"]
-    K -->|"Consume Event"| C["Microservice C"]
+    A["Microservice A"] -->|"Publish Message"| E["RabbitMQ Exchange"]
+    E --> Q["Message Queue"]
+    Q -->|"Consume Message"| B["Microservice B"]
 ```
+
+### Key Concepts
+
+- **Producer:** Publishes messages to RabbitMQ.
+- **Exchange:** Receives messages and routes them according to binding rules.
+- **Queue:** Stores messages until they are consumed.
+- **Consumer:** Processes messages asynchronously.
+- **Binding:** Connects exchanges with queues using routing rules.
 
 ### Benefits
 
 - Loose coupling between microservices
-- Asynchronous event processing
-- Independent event producers and consumers
-- Improved resilience to temporary service unavailability
-- Scalable message processing
-- Support for event-driven workflows
+- Asynchronous message processing
+- Improved service independence
+- Reliable message delivery when appropriately configured
+- Better handling of background operations
+- Scalable event-driven workflows
 
 ---
 
-## 🤖 Google Gemini AI Integration
+## 🐳 Docker Integration
 
-FitVerse integrates **Google Gemini AI** to support intelligent fitness-related functionality.
+FitVerse uses Docker to containerize infrastructure components, specifically:
 
-Potential AI-powered capabilities include:
+- RabbitMQ
+- Keycloak
 
-- Personalized workout recommendations
-- AI-generated fitness guidance
-- Customized training suggestions
-- Fitness-related question answering
-- Personalized wellness recommendations
+Running these services inside Docker containers simplifies local development, environment setup, and dependency management.
 
-The Gemini API is accessed through backend services, allowing AI functionality to remain separated from frontend implementation.
+### RabbitMQ Container
 
-> AI capabilities are being developed as part of the FitVerse roadmap. Specific features will be documented as they are implemented.
+RabbitMQ provides asynchronous messaging capabilities to the microservices.
+
+### Keycloak Container
+
+Keycloak provides centralized authentication and authorization using OAuth2 and OpenID Connect.
+
+### Example Docker Commands
+
+**Start RabbitMQ:**
+
+```bash
+docker run -d \
+  --name fitverse-rabbitmq \
+  -p 5672:5672 \
+  -p 15672:15672 \
+  rabbitmq:management
+```
+
+**Start Keycloak:**
+
+```bash
+docker run -d \
+  --name fitverse-keycloak \
+  -p 8080:8080 \
+  quay.io/keycloak/keycloak:latest \
+  start-dev
+```
+
+> These are development examples. Configure persistent volumes, credentials, secrets, and production settings before deployment. Use a pinned Keycloak image version rather than `latest` for reproducible environments.
+
+---
+
+## 🔎 Service Discovery with Eureka
+
+FitVerse uses **Netflix Eureka Server** for microservice registration and discovery.
+
+### How It Works
+
+1. Eureka Server starts and maintains a service registry.
+2. Spring Boot microservices register themselves with Eureka.
+3. Registered services periodically renew their leases.
+4. The API Gateway and other services discover registered instances.
+5. Dynamic discovery supports flexible routing and inter-service communication.
+
+### Benefits
+
+- Dynamic service discovery
+- Reduced dependency on hardcoded service addresses
+- Support for multiple service instances
+- Improved flexibility in distributed deployments
+
+> Eureka is a service discovery server, not an API Gateway. Spring Cloud Gateway is used separately for centralized request routing.
 
 ---
 
@@ -293,32 +316,23 @@ Spring Data MongoDB simplifies repository operations and document persistence.
 
 ### Persistence Strategy
 
-Each microservice can use the database technology that best suits its requirements.
-
-The architecture aims to avoid unnecessary coupling between service-specific data models.
+Each microservice can use the database technology that best suits its requirements, keeping service-specific data models independent.
 
 ---
 
-## 🔎 Service Discovery with Eureka
+## 🤖 Google Gemini AI Integration
 
-FitVerse uses **Netflix Eureka Server** for microservice registration and discovery.
+FitVerse integrates **Google Gemini AI** to support intelligent fitness-related functionality.
 
-### How It Works
+Potential AI-powered capabilities include:
 
-1. Eureka Server starts and maintains a service registry.
-2. Spring Boot microservices register themselves with Eureka.
-3. Registered services periodically renew their leases.
-4. Services and the API Gateway can discover registered service instances.
-5. Service discovery supports dynamic routing and inter-service communication.
+- Personalized workout recommendations
+- AI-generated fitness guidance
+- Customized training suggestions
+- Fitness-related question answering
+- Personalized wellness recommendations
 
-### Benefits
-
-- Dynamic service discovery
-- Reduced dependency on hardcoded service addresses
-- Support for multiple service instances
-- Improved flexibility in distributed deployments
-
-> **Note:** Eureka is a service discovery server, not an API Gateway. Spring Cloud Gateway can be used separately for centralized request routing.
+The Gemini API is accessed through backend services, keeping AI functionality separated from frontend implementation.
 
 ---
 
@@ -333,20 +347,17 @@ FitVerse/
 │   └── React Application
 │
 ├── backend/
-│   │
 │   ├── api-gateway/
-│   │
 │   ├── eureka-server/
-│   │
 │   └── microservices/
 │       └── Spring Boot Services
 │
-├── README.md
+├── docker/
+│   └── Infrastructure configurations
 │
+├── README.md
 └── .gitignore
 ```
-
-Additional service modules, infrastructure configurations, and documentation can be added as the application evolves.
 
 ---
 
@@ -354,15 +365,12 @@ Additional service modules, infrastructure configurations, and documentation can
 
 ### Prerequisites
 
-Before running FitVerse, ensure that the following tools and services are available:
-
-- Java JDK compatible with the selected Spring Boot version
+- Java JDK compatible with your Spring Boot version
 - Node.js and npm
 - Maven
 - PostgreSQL
 - MongoDB
-- Apache Kafka
-- Keycloak
+- Docker and Docker Compose (optional)
 - Google Gemini API key
 - Git
 
@@ -373,11 +381,21 @@ git clone https://github.com/Rashmi-2005-Ranjan/FitVerse.git
 cd FitVerse
 ```
 
-### 2. Configure Backend Services
+### 2. Start RabbitMQ and Keycloak
 
-Configure each Spring Boot microservice with the appropriate environment settings.
+Start the Docker containers using the commands provided in the Docker Integration section.
 
-A typical PostgreSQL configuration:
+Verify that both containers are running:
+
+```bash
+docker ps
+```
+
+### 3. Configure Backend Services
+
+Configure each Spring Boot microservice with the appropriate environment variables.
+
+**PostgreSQL:**
 
 ```properties
 spring.datasource.url=${POSTGRES_URL}
@@ -385,70 +403,64 @@ spring.datasource.username=${POSTGRES_USERNAME}
 spring.datasource.password=${POSTGRES_PASSWORD}
 ```
 
-A typical MongoDB configuration:
+**MongoDB:**
 
 ```properties
 spring.data.mongodb.uri=${MONGODB_URI}
 ```
 
-A typical Eureka client configuration:
+**Eureka:**
 
 ```properties
 eureka.client.service-url.defaultZone=${EUREKA_SERVER_URL}
 ```
 
-A typical Kafka configuration:
+**RabbitMQ:**
 
 ```properties
-spring.kafka.bootstrap-servers=${KAFKA_BOOTSTRAP_SERVERS}
+spring.rabbitmq.host=${RABBITMQ_HOST}
+spring.rabbitmq.port=${RABBITMQ_PORT}
+spring.rabbitmq.username=${RABBITMQ_USERNAME}
+spring.rabbitmq.password=${RABBITMQ_PASSWORD}
 ```
 
-A typical Spring Security OAuth2 resource server configuration:
+**Keycloak / OAuth2 Resource Server:**
 
 ```properties
 spring.security.oauth2.resourceserver.jwt.issuer-uri=${KEYCLOAK_ISSUER_URI}
 ```
 
-Google Gemini API credentials should be configured using environment variables or an appropriate secrets-management solution.
+**Gemini API:**
 
 ```properties
 GEMINI_API_KEY=${GEMINI_API_KEY}
 ```
 
-> Configuration property names and environment variable bindings should be adjusted to match the actual implementation of each service.
-
-### 3. Start Infrastructure Services
-
-Ensure the required infrastructure is running:
-
-1. PostgreSQL
-2. MongoDB
-3. Apache Kafka
-4. Keycloak
+Adjust the configuration according to each microservice's actual requirements.
 
 ### 4. Start Eureka Server
 
-Navigate to the Eureka Server module and start the application.
+Navigate to the Eureka Server module:
 
 ```bash
 mvn spring-boot:run
 ```
 
-### 5. Start Spring Boot Microservices
+### 5. Start Backend Microservices
 
-Run each backend service independently using Maven.
+Start each Spring Boot microservice independently:
 
 ```bash
 mvn spring-boot:run
 ```
 
-### 6. Start the API Gateway
+### 6. Start API Gateway
 
-Start the configured gateway service after the required infrastructure and discovery services are available.
+Start the configured API Gateway after the discovery infrastructure is available.
 
 ### 7. Start React Frontend
 
-Navigate to the frontend directory.
+Navigate to the frontend directory:
 
 ```bash
 cd frontend
@@ -456,43 +468,11 @@ npm install
 npm run dev
 ```
 
-Open the local development URL displayed by the frontend development server.
-
----
-
-## 🔄 Development Workflow
-
-FitVerse follows a modular development approach.
-
-### Frontend Development
-
-- Develop reusable React components
-- Integrate REST APIs
-- Handle authentication flows
-- Build responsive user interfaces
-
-### Backend Development
-
-- Design RESTful APIs
-- Implement Spring Boot services
-- Configure persistence layers
-- Secure endpoints using Spring Security
-- Integrate Kafka producers and consumers
-- Connect AI functionality through Gemini APIs
-
-### Microservices Integration
-
-- Register services with Eureka
-- Configure API Gateway routing
-- Integrate Keycloak authentication
-- Establish asynchronous Kafka communication
-- Manage database connectivity independently
+Open the local development URL displayed by Vite.
 
 ---
 
 ## 📈 Future Roadmap
-
-The following capabilities are planned or being explored:
 
 - [ ] Complete microservices integration
 - [ ] Personalized fitness dashboard
@@ -501,7 +481,7 @@ The following capabilities are planned or being explored:
 - [ ] Fitness progress analytics
 - [ ] Nutrition and wellness recommendations
 - [ ] Event-driven notification workflows
-- [ ] Containerization using Docker
+- [ ] Docker Compose infrastructure setup
 - [ ] Automated CI/CD pipeline
 - [ ] Distributed monitoring and observability
 - [ ] Production deployment
@@ -518,6 +498,7 @@ FitVerse is being developed to strengthen practical experience in:
 - Distributed systems
 - Event-driven communication
 - OAuth2 and OpenID Connect security
+- Docker containerization
 - Relational and NoSQL database integration
 - Generative AI integration
 - Scalable application design
