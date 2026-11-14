@@ -54,10 +54,6 @@ public class UserService {
     }
 
     public Boolean isUserExist(String userId) {
-        Boolean isExists = userRepository.existsUserByKeycloakId ( userId );
-        if (!isExists) {
-            throw new UserNotExistsException ( "User with given id doesn't exists" );
-        }
-        return true;
+        return userRepository.existsUserByKeycloakId ( userId );
     }
 }
